@@ -91,7 +91,7 @@
 ### 2. 구조화된 데이터 자동 삽입 (Insert)
 표 안에 데이터를 채워 넣거나, 특정 양식을 유지하며 방대한 텍스트를 삽입할 때 사용한다. 이 명령어는 JSON 파일을 인자로 받는다.
 
-1. 삽입할 데이터를 분석하여 아래 예시와 같은 JSON 포맷 데이터 구조를 만든다.
+1. 삽입할 데이터를 분석하여 아래 스키마에 맞는 JSON 데이터 구조를 만든다.
 2. 해당 JSON 데이터를 사용자의 PC 임시 경로(예: `C:\temp\payload.json`)에 파일로 저장한다.
 3. 아래 명령어를 실행하여 브릿지가 파일을 읽고 문서에 주입하도록 명령한다.
 
@@ -99,20 +99,60 @@
 & "브릿지경로" "HWP_SECURE_TOKEN_2026" --command insert --file "C:\temp\payload.json"
 ```
 
-#### [JSON 페이로드 구조 예시]
+#### [JSON 스키마 — 실제 브릿지 모델 기준]
+
+> ⚠️ **핵심 규칙**: `text` 필드에 `1.`, `ㅇ`, `-` 같은 **머리 기호/번호를 절대 포함하지 마라.**  
+> 번호와 기호는 HWP 앱이 `level` 값을 보고 템플릿에서 자동으로 붙여준다.  
+> LLM은 오직 `indentSpaces`(공백 개수)와 순수 `text` 내용만 제공하면 된다.
+
 ```json
 {
   "projectName": "사업계획서 작성",
   "templateId": "[사용자가 알려준 템플릿 이름]",
   "sections": [
-    { 
-      "text": "시장 분석 결과 요약", 
-      "attributes": { "bold": true, "size": 14 } 
-    },
-    { 
-      "text": "  1. 본 사업의 시장 규모는 성장하고 있으며...", 
-      "attributes": { "bold": false, "size": 11 } 
+    {
+      "id": "section-1",
+      "paragraphs": [
+        {
+          "id": "p1",
+          "level": 1,
+          "indentSpaces": 0,
+          "text": "시장 분석 및 필요성",
+          "isBold": false,
+          "fontSize": 0,
+          "lineSpacing": 0
+        },
+        {
+          "id": "p2",
+          "level": 2,
+          "indentSpaces": 2,
+          "text": "국내 시장 규모는 지속적으로 성장하고 있으며 연평균 성장률은 약 12%에 달한다.",
+          "isBold": false,
+          "fontSize": 0,
+          "lineSpacing": 0
+        },
+        {
+          "id": "p3",
+          "level": 3,
+          "indentSpaces": 4,
+          "text": "특히 중소기업 대상 솔루션 수요가 급증하고 있다.",
+          "isBold": false,
+          "fontSize": 0,
+          "lineSpacing": 0
+        }
+      ]
     }
   ]
 }
 ```
+
+**필드 설명:**
+| 필드 | 타입 | 설명 |
+|---|---|---|
+| `level` | int | 문단 수준 (1=대항목, 2=중항목, 3=소항목) |
+| `indentSpaces` | int | 앞 공백 개수. 수준을 결정하는 핵심 값 |
+| `text` | string | **순수 텍스트만**. 기호/번호 포함 금지 |
+| `isBold` | bool | 굵게 여부 (0=일반, 기본은 템플릿 따름) |
+| `fontSize` | int | 글자 크기 (0이면 템플릿 기본값 사용) |
+| `lineSpacing` | int | 줄간격 (0이면 템플릿 기본값 사용) |
+

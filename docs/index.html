@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HWP Automation App - 로그인 완료</title>
+  <style>
+    :root {
+      --primary: #0b57d0;
+      --surface: #ffffff;
+      --background: #f8f9fa;
+      --text-main: #1f1f1f;
+      --text-muted: #444746;
+      --border: #e1e3e1;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+      background: radial-gradient(circle at top, #eef4ff 0%, var(--background) 45%, #f3f4f6 100%);
+      color: var(--text-main);
+      font-family: "Segoe UI", "Noto Sans KR", sans-serif;
+    }
+
+    .card {
+      width: min(100%, 480px);
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 40px 32px;
+      text-align: center;
+      box-shadow: 0 20px 45px rgba(11, 87, 208, 0.08);
+    }
+
+    .icon {
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 24px;
+      border-radius: 999px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      background: #e8f0fe;
+    }
+
+    h1 {
+      margin: 0 0 12px;
+      font-size: 28px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+      color: var(--text-muted);
+      line-height: 1.65;
+      font-size: 15px;
+    }
+
+    .hint {
+      margin-top: 18px;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  </style>
+</head>
+<body>
+  <main class="card">
+    <div class="icon" aria-hidden="true">
+      <svg viewBox="0 0 24 24" width="40" height="40" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M19.916 4.352c1.084 1.107 1.066 3.125-.04 4.195l-8.625 8.35a2.536 2.536 0 0 1-3.522 0l-3.32-3.153a2.646 2.646 0 0 1-.035-3.834 2.872 2.872 0 0 1 3.992-.033l1.523 1.446 6.837-6.618a2.885 2.885 0 0 1 3.19-.353z" fill="currentColor"/>
+      </svg>
+    </div>
+    <h1>로그인이 완료되었습니다</h1>
+    <p>인증이 정상적으로 처리되었습니다.<br>잠시 후 HWP Automation 앱으로 돌아갑니다.</p>
+    <p class="hint">앱이 자동으로 열리지 않으면 HWP Automation 앱을 직접 다시 열어주세요.</p>
+  </main>
+
+  <script>
+    const hash = window.location.hash;
+    if (hash && hash.includes('access_token')) {
+      window.location.replace(`hwpapp://callback${hash}`);
+    }
+  </script>
+</body>
+</html>
